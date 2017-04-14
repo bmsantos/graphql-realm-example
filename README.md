@@ -10,6 +10,8 @@ Simple project used to demonstrate possible Realm / GraphQL integration.
 ## Deployment
 
 1. [Install ROM](https://realm.io/docs/realm-object-server/#install-realm-object-server) and [start server](https://realm.io/docs/realm-object-server/#running-the-server)
+1. Copy admin_token.base64 to project root
+1. Create access-token.professional with the 60 day access token provided through Realm's download email
 1. [Start GraphQL Subscriptions Example](https://github.com/bmsantos/apollo-graphql-subscriptions-example#start-susbcription-client-and-server-apps) 
 1. Open a browser window and a GraphiQL Subscriptions window as described [here](https://github.com/bmsantos/apollo-graphql-subscriptions-example#test-it)
 1. Start the [Realm Browser](https://realm.io/docs/realm-object-server/#data-browser) found in OSX Realm's root directory 
