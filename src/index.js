@@ -12,24 +12,31 @@ const SERVER_URL = 'realm://127.0.0.1:9080';
 
 const NOTIFIER_PATH = '^\/[0-9a-f]+\/messages$';
 
-// Lokka
-import Lokka from "lokka";
-import Transport from "lokka-transport-http";
+// Apollo -> Fails whan called from Realm Listener handler
+import ApolloClient, { createNetworkInterface } from "apollo-client";
+import gql from "graphql-tag";
+import fetch from "node-fetch";
+global.fetch = fetch;
 
-const MUTATE_MESSAGE = `
-    ($message: String!, $broadcast: Boolean!) {
+const MUTATE_MESSAGE = gql`
+    mutation AddMessage($message: String!, $broadcast: Boolean!) {
         addMessage(message: $message, broadcast: $broadcast)
     }
 `;
 
-const client = new Lokka({
-  transport: new Transport('http://localhost:5060/graphql')
+const client = new ApolloClient({
+  networkInterface: createNetworkInterface({
+    uri: 'http://localhost:5060/graphql'
+  })
 });
 
 const mutate = async (message) => {
-  let vars = {message: message.current, broadcast: true};
-  const data = await client.mutate(MUTATE_MESSAGE, vars);
-  console.log(`mutation result: ${data.addMessage}`);
+  const data = await client.mutate({
+    operationName: "AddMessage",
+    mutation: MUTATE_MESSAGE,
+    variables: {message: 'Hi from Realm', broadcast: true}
+  });
+  console.log(`mutation result: ${data.data.addMessage}`);
 };
 
 const handleUserMessageChange = (changeEvent) => {
